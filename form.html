@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ghi Danh Giáo Lý</title>
+
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function () {
+          this.style.borderColor = '#4db4f0';
+        });
+        input.addEventListener('blur', function () {
+          this.style.borderColor = '#ccc';
+        });
+      });
+
+      const resetButton = document.querySelector('button[type="reset"]');
+      resetButton.addEventListener('click', function () {
+        inputs.forEach(input => {
+          input.style.borderColor = '#ccc';
+        });
+      });
+
+      const classInput = document.getElementById('Lop');
+      classInput.addEventListener('input', function () {
+        if (this.value.length < 3 || this.value.length > 4) {
+          this.setCustomValidity('Lớp phải có từ 3 đến 4 ký tự.');
+        } else {
+          this.setCustomValidity('');
+        }
+      });
+
+      const form = document.getElementById("myForm");
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const requiredFields = [
+          "TenThanh",
+          "HovaTen",
+          "NgaySinh",
+          "NoiSinh",
+          "NgayRuaToi",
+          "NoiRuaToi",
+          "DiaChi",
+          "Lop"
+        ];
+
+        let isValid = true;
+        let missingFields = [];
+
+        requiredFields.forEach(function (fieldId) {
+          const field = document.getElementById(fieldId);
+          if (!field.value.trim()) {
+            isValid = false;
+            const label = field.closest("tr").querySelector("label").innerText.replace(":", "");
+            missingFields.push(label);
+          }
+        });
+
+        if (!isValid) {
+          alert("Vui lòng điền đầy đủ các trường bắt buộc:\n- " + missingFields.join("\n- "));
+          return;
+        }
+
+        const googleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLSeMbMFYsTDethmAO5t26jdg6-8FYM1lWKJtIyid4hHaiw1joQ/formResponse";
+        const data = new FormData();
+
+        
+
+        HovaTenDem = document.getElementById("HovaTen").value.split(" ");
+        if (HovaTenDem.length > 1) {
+          data.append("entry.1037847319", HovaTenDem.slice(0, -1).join(" ")); // Họ và tên đệm
+          data.append("entry.2060717990", HovaTenDem[HovaTenDem.length - 1]); // Tên
+          alert("Họ và tên đệm: " + HovaTenDem.slice(0, -1).join(" ") + "\nTên: " + HovaTenDem[HovaTenDem.length - 1]);
+        } else {
+          data.append("entry.1037847319", ""); // Họ và tên đệm
+          data.append("entry.2060717990", HovaTenDem[0]); // Tên
+        }
+        data.append("entry.356273339", document.getElementById("TenThanh").value);
+        data.append("entry.243338441", document.getElementById("NgaySinh").value);
+        data.append("entry.1672844752", document.getElementById("NoiSinh").value);
+        data.append("entry.2085933564", document.getElementById("NgayRuaToi").value);
+        data.append("entry.1205441760", document.getElementById("NoiRuaToi").value);
+        data.append("entry.1883432764", document.getElementById("HoTenBa").value);
+        data.append("entry.906309526", document.getElementById("SDTBa").value);
+        data.append("entry.57681438", document.getElementById("HoTenMe").value);
+        data.append("entry.151760108", document.getElementById("SDTMe").value);
+        data.append("entry.763372519", document.getElementById("DiaChi").value);
+
+        let lopValue = document.getElementById("Lop").value;
+        if (lopValue.startsWith("CC")) {
+          lopValue = "Chiên Con " + lopValue.slice(2);
+        } else if (lopValue.startsWith("KT")) {
+          lopValue = "Khai tâm " + lopValue.slice(2);
+        } else if (lopValue.startsWith("RL")) {
+          lopValue = "Rước Lễ " + lopValue.slice(2);
+        } else if (lopValue.startsWith("TS")) {
+          lopValue = "Thêm sức " + lopValue.slice(2);
+        } else if (lopValue.startsWith("BD")) {
+          lopValue = "Bao Đồng " + lopValue.slice(2);
+        } else if (lopValue.startsWith("VD")) {
+          lopValue = "Vào Đời " + lopValue.slice(2);
+        } else {
+          alert("Lớp không hợp lệ. Vui lòng nhập lớp bắt đầu bằng CC, KT, RL, TS hoặc BD.");
+          return;
+        }
+        data.append("entry.1810318122", lopValue);
+
+        fetch(googleFormURL, {
+          method: "POST",
+          mode: "no-cors",
+          body: data
+        }).then(() => {
+          alert("Đăng ký thành công!");
+          form.reset();
+        }).catch(() => {
+          alert("Đã có lỗi xảy ra khi gửi form.");
+        });
+      });
+
+      // Flatpickr định dạng dd/mm/yyyy
+      flatpickr("#NgaySinh", {
+        dateFormat: "d/m/Y",
+        locale: "vn",
+        allowInput: true
+      });
+      flatpickr("#NgayRuaToi", {
+        dateFormat: "d/m/Y",
+        locale: "vn",
+        allowInput: true 
+      });
+    });
+  </script>
+
+  <style>
+    @font-face {
+      font-family: 'UTMCookies';
+      src: url('fonts/UTM-COOKIES.TTF') format('truetype');
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'UTMCookies', sans-serif;
+      background-color: #57e6eb;
+    }
+    div.backgr {
+      width: 95%;
+      max-width: 1500px;
+      margin: 20px auto;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: top center;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 10px;
+    }
+    div.form-container {
+      padding: 600px 20% 500px 20%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 30px;
+      color: #333;
+      text-align: left;
+    }
+    td {
+      padding: 10px;
+      vertical-align: top;
+    }
+    input {
+      width: 100%;
+      background-color: #e2f8fa;
+      height: 40px;
+      font-size: 1rem;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-family: 'UTMCookies', sans-serif;
+    }
+    button {
+      width: 100%;
+      max-width: 200px;
+      height: 50px;
+      background-color: #4db4f0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      font-family: 'UTMCookies', sans-serif;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #389cd6;
+    }
+  </style>
+</head>
+<body>
+  <div class="backgr">
+    <div class="form-container">
+      <form id="myForm">
+        <table>
+          <tr><td><label for="TenThanh">Tên Thánh:</label></td><td><input type="text" id="TenThanh" required></td></tr>
+          <tr><td><label for="HovaTen">Họ và tên:</label></td><td><input type="text" id="HovaTen" required></td></tr>
+          <tr><td><label for="NgaySinh">Ngày tháng năm sinh:</label></td><td><input type="text" id="NgaySinh" required></td></tr>
+          <tr><td><label for="NoiSinh">Nơi sinh:</label></td><td><input type="text" id="NoiSinh" required></td></tr>
+          <tr><td><label for="NgayRuaToi">Ngày rửa tội:</label></td><td><input type="text" id="NgayRuaToi" required></td></tr>
+          <tr><td><label for="NoiRuaToi">Nơi rửa tội:</label></td><td><input type="text" id="NoiRuaToi" required></td></tr>
+          <tr><td><label for="HoTenBa">Họ tên Ba:</label></td><td><input type="text" id="HoTenBa"></td></tr>
+          <tr><td><label for="SDTBa">Số điện thoại Ba:</label></td><td><input type="text" id="SDTBa"></td></tr>
+          <tr><td><label for="HoTenMe">Họ tên Mẹ:</label></td><td><input type="text" id="HoTenMe"></td></tr>
+          <tr><td><label for="SDTMe">Số điện thoại Mẹ:</label></td><td><input type="text" id="SDTMe"></td></tr>
+          <tr><td><label for="DiaChi">Địa chỉ:</label></td><td><input type="text" id="DiaChi" required></td></tr>
+          <tr><td><label for="Lop">Lớp:</label></td><td><input type="text" id="Lop" required></td></tr>
+          <tr><td colspan="2" style="text-align:center;">
+            <button type="submit">Đăng ký</button>
+            <button type="reset" style="margin-left:10px;">Reset</button>
+          </td></tr>
+        </table> 
+      </form>
+    </div>
+  </div>
+</body>
+</html>
