@@ -89,8 +89,6 @@
         data.append("entry.1672844752", document.getElementById("NoiSinh").value);
         data.append("entry.2085933564", document.getElementById("NgayRuaToi").value);
         data.append("entry.1205441760", document.getElementById("NoiRuaToi").value);
-        data.append("entry.740916661", document.getElementById("NgayRuocLe").value);
-        data.append("entry.585363946", document.getElementById("NoiRuocLe").value);
         data.append("entry.1883432764", document.getElementById("HoTenBa").value);
         data.append("entry.906309526", document.getElementById("SDTBa").value);
         data.append("entry.57681438", document.getElementById("HoTenMe").value);
@@ -138,11 +136,6 @@
         dateFormat: "d/m/Y",
         locale: "vn",
         allowInput: true 
-      });
-      flatpickr("#NgayRuocLe", {
-        dateFormat: "d/m/Y",
-        locale: "vn",
-        allowInput: true
       });
     });
   </script>
@@ -224,8 +217,6 @@
           <tr><td><label for="NoiSinh">Nơi sinh:</label></td><td><input type="text" id="NoiSinh" required></td></tr>
           <tr><td><label for="NgayRuaToi">Ngày rửa tội:</label></td><td><input type="text" id="NgayRuaToi" required></td></tr>
           <tr><td><label for="NoiRuaToi">Nơi rửa tội:</label></td><td><input type="text" id="NoiRuaToi" required></td></tr>
-          <tr><td><label for="NgayRucLe">Ngày Rước Lễ lần đầu:</label></td><td><input type="text" id="NgayRuocLe"></td></tr>
-          <tr><td><label for="NoiRucLe">Nơi Rước Lễ lần đầu:</label></td><td><input type="text" id="NoiRuocLe"></td></tr>
           <tr><td><label for="HoTenBa">Họ tên Ba:</label></td><td><input type="text" id="HoTenBa"></td></tr>
           <tr><td><label for="SDTBa">Số điện thoại Ba:</label></td><td><input type="text" id="SDTBa"></td></tr>
           <tr><td><label for="HoTenMe">Họ tên Mẹ:</label></td><td><input type="text" id="HoTenMe"></td></tr>
